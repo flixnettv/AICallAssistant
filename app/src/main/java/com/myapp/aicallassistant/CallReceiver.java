@@ -17,7 +17,7 @@ public class CallReceiver extends BroadcastReceiver {
                 String response = online
                         ? "مرحبًا! أنت تتحدث مع المساعد الذكي، كيف أقدر أساعدك؟"
                         : "مرحبًا! أنا مساعدك الصوتي بدون إنترنت، كيف أقدر أساعدك بشكل مبسط؟";
-                VoiceResponder.replyNow(response, MainActivity.selectedVoice);
+                VoiceResponder.replyWithStyle(response, MainActivity.selectedVoiceStyle);
             }
         }
     }
