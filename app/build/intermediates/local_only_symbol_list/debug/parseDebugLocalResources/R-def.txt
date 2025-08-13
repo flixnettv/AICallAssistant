@@ -1,0 +1,9 @@
+R_DEF: Internal format may change without notice
+local
+id aiResponseText
+id autoReplySwitch
+id darkModeSwitch
+id offlineModeSwitch
+id replyNowButton
+id voiceStyleSpinner
+layout activity_main

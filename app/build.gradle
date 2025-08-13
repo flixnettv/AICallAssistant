@@ -4,21 +4,20 @@ plugins {
 
 android {
     namespace 'com.myapp.aicallassistant'
-    compileSdkVersion 34
+    compileSdk 34
 
     defaultConfig {
         applicationId 'com.myapp.aicallassistant'
-        minSdkVersion 24
-        targetSdkVersion 34
+        minSdk 24
+        targetSdk 34
         versionCode 1
         versionName '1.0'
-
-        // Limit native ABIs for smaller size
-        ndk {
-            abiFilters 'arm64-v8a'
-        }
-        // Limit packaged resources to Arabic and English only
         resConfigs 'ar', 'en'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildTypes {
@@ -33,16 +32,12 @@ android {
         }
     }
 
-    // Split APK by ABI and density for smaller downloads
     splits {
         abi {
             enable true
             reset()
             include 'arm64-v8a'
             universalApk false
-        }
-        density {
-            enable true
         }
     }
 
@@ -56,8 +51,6 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.core:core-ktx:1.13.1'
 
-    // Offline speech recognition (Vosk)
     implementation 'com.alphacephei:vosk-android:0.3.38'
 }
