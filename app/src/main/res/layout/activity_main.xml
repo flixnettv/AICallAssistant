@@ -10,6 +10,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Switch
+        android:id="@+id/offlineModeSwitch"
+        android:text="العمل بدون إنترنت (محدود)"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/replyNowButton"
         android:text="رد الآن"
