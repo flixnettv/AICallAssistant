@@ -1,2 +1,2 @@
-rootProject.name = 'AICallAssistant'
-include ':app'
+rootProject.name = "AiCallAssistant"
+include(":app")
