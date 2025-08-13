@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /workspace/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-30:12
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-30:12
+ADDED from /workspace/app/src/main/AndroidManifest.xml:2:1-32:12
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-32:12
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-32:12
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-32:12
 MERGED from [com.google.android.material:material:1.12.0] /home/ubuntu/.gradle/caches/transforms-4/4e41cfd688f0c663f7cc7298d2b06c3e/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /home/ubuntu/.gradle/caches/transforms-4/49d889fc1887c427715b28b56f4feb01/transformed/jetified-appcompat-resources-1.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/ubuntu/.gradle/caches/transforms-4/09713f26a1a089821e93cef5382fe17d/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
@@ -75,8 +75,8 @@ ADDED from /workspace/app/src/main/AndroidManifest.xml:8:5-79
 	android:name
 		ADDED from /workspace/app/src/main/AndroidManifest.xml:8:22-76
 application
-ADDED from /workspace/app/src/main/AndroidManifest.xml:10:5-29:19
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:10:5-29:19
+ADDED from /workspace/app/src/main/AndroidManifest.xml:10:5-31:19
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:10:5-31:19
 MERGED from [com.google.android.material:material:1.12.0] /home/ubuntu/.gradle/caches/transforms-4/4e41cfd688f0c663f7cc7298d2b06c3e/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /home/ubuntu/.gradle/caches/transforms-4/4e41cfd688f0c663f7cc7298d2b06c3e/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/ubuntu/.gradle/caches/transforms-4/09713f26a1a089821e93cef5382fe17d/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -105,34 +105,38 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/ubuntu/.gradle/caches
 		ADDED from /workspace/app/src/main/AndroidManifest.xml:11:9-35
 	android:theme
 		ADDED from /workspace/app/src/main/AndroidManifest.xml:14:9-68
+activity#com.myapp.aicallassistant.SettingsActivity
+ADDED from /workspace/app/src/main/AndroidManifest.xml:16:9-54
+	android:name
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:16:19-51
 activity#com.myapp.aicallassistant.MainActivity
-ADDED from /workspace/app/src/main/AndroidManifest.xml:16:9-21:20
+ADDED from /workspace/app/src/main/AndroidManifest.xml:18:9-23:20
 	android:exported
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:16:48-71
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:18:48-71
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:16:19-47
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:18:19-47
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /workspace/app/src/main/AndroidManifest.xml:17:13-20:29
+ADDED from /workspace/app/src/main/AndroidManifest.xml:19:13-22:29
 action#android.intent.action.MAIN
-ADDED from /workspace/app/src/main/AndroidManifest.xml:18:17-69
+ADDED from /workspace/app/src/main/AndroidManifest.xml:20:17-69
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:18:25-66
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:20:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /workspace/app/src/main/AndroidManifest.xml:19:17-77
+ADDED from /workspace/app/src/main/AndroidManifest.xml:21:17-77
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:19:27-74
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:21:27-74
 receiver#com.myapp.aicallassistant.CallReceiver
-ADDED from /workspace/app/src/main/AndroidManifest.xml:23:9-27:20
+ADDED from /workspace/app/src/main/AndroidManifest.xml:25:9-29:20
 	android:exported
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:23:48-71
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:25:48-71
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:23:19-47
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:25:19-47
 intent-filter#action:name:android.intent.action.PHONE_STATE
-ADDED from /workspace/app/src/main/AndroidManifest.xml:24:13-26:29
+ADDED from /workspace/app/src/main/AndroidManifest.xml:26:13-28:29
 action#android.intent.action.PHONE_STATE
-ADDED from /workspace/app/src/main/AndroidManifest.xml:25:17-76
+ADDED from /workspace/app/src/main/AndroidManifest.xml:27:17-76
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:25:25-73
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:27:25-73
 uses-sdk
 INJECTED from /workspace/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /workspace/app/src/main/AndroidManifest.xml

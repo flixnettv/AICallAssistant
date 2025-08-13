@@ -28,6 +28,7 @@
         android:label="AI Call Assistant"
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar" >
+        <activity android:name="com.myapp.aicallassistant.SettingsActivity" />
         <activity
             android:name="com.myapp.aicallassistant.MainActivity"
             android:exported="true" >

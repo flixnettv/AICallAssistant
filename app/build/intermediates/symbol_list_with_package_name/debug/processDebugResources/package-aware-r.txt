@@ -3246,6 +3246,7 @@ id material_timepicker_ok_button
 id material_timepicker_view
 id material_value_index
 id matrix
+id menu_settings
 id message
 id middle
 id mini
@@ -3296,6 +3297,8 @@ id notification_main_column
 id notification_main_column_container
 id off
 id offlineModeSwitch
+id ollamaModel
+id ollamaUrl
 id on
 id open_search_bar_text_view
 id open_search_view_background
@@ -3342,6 +3345,7 @@ id right_icon
 id right_side
 id rounded
 id row_index_key
+id saveButton
 id save_non_transition_alpha
 id save_overlay_view
 id sawtooth
@@ -3459,6 +3463,7 @@ id view_tree_view_model_store_owner
 id visible
 id visible_removing_fragment_view_tag
 id voiceStyleSpinner
+id whisperUrl
 id withText
 id with_icon
 id withinBounds
@@ -3579,6 +3584,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_main
+layout activity_settings
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
@@ -3658,6 +3664,7 @@ layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
+menu main_menu
 plurals mtrl_badge_content_description
 string abc_action_bar_home_description
 string abc_action_bar_up_description

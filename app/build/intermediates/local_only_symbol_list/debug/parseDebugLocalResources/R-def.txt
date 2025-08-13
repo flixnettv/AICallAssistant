@@ -3,7 +3,14 @@ local
 id aiResponseText
 id autoReplySwitch
 id darkModeSwitch
+id menu_settings
 id offlineModeSwitch
+id ollamaModel
+id ollamaUrl
 id replyNowButton
+id saveButton
 id voiceStyleSpinner
+id whisperUrl
 layout activity_main
+layout activity_settings
+menu main_menu
