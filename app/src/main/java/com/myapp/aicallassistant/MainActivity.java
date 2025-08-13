@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
     public void onFinalResult(String text) {
         runOnUiThread(() -> {
             String input = text == null || text.trim().isEmpty() ? "" : text.trim();
-            String reply = input.isEmpty() ? "مرحبًا! كيف يمكنني مساعدتك؟" : generateReply(input);
+            String reply = input.isEmpty() ? "مرحبًا! إزيّك؟" : generateReply(input);
             aiResponseText.setText("أنت قلت: " + input + "\nالرد: " + reply);
             VoiceResponder.replyWithStyle(reply, selectedVoiceStyle);
         });
@@ -107,13 +107,11 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
 
     private String generateReply(String input) {
         if (!offlineMode && ConnectivityUtils.isOnline(getApplicationContext()) && Config.hasOnlineAgent()) {
-            // TODO: call Ollama server for a better reply
-            return "سمعتك تقول: " + input + ". كيف أستطيع المساعدة أكثر؟";
+            try {
+                String resp = OnlineAgentClient.generateReplyEgyptian(input);
+                if (resp != null && !resp.trim().isEmpty()) return resp.trim();
+            } catch (Exception ignored) { }
         }
-        String dialect = DialectDetector.detectDialect(input);
-        if (!dialect.isEmpty()) {
-            return "أهلاً! (غير متصل) لهجتك: " + dialect + ". كيف أقدر أساعدك؟";
-        }
-        return "أهلاً! كيف أقدر أساعدك؟";
+        return "أهلاً! أنا سامعك. عايزني أعمل إيه؟";
     }
 }
