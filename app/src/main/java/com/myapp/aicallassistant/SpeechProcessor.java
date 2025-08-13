@@ -5,7 +5,6 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
-import org.json.JSONObject;
 import org.vosk.Model;
 import org.vosk.Recognizer;
 
@@ -27,7 +26,6 @@ public class SpeechProcessor {
     private Thread recordThread;
     private volatile boolean isRecording = false;
 
-    // Vosk
     private static Model voskModel;
 
     public SpeechProcessor(Listener listener) {
@@ -35,7 +33,8 @@ public class SpeechProcessor {
     }
 
     public void start(Context context, boolean offlinePreferred) {
-        boolean online = !offlinePreferred && ConnectivityUtils.isOnline(context) && Config.hasOnlineAsr();
+        boolean hasWhisper = AppSettings.getWhisperServerUrl(context) != null && !AppSettings.getWhisperServerUrl(context).trim().isEmpty();
+        boolean online = !offlinePreferred && ConnectivityUtils.isOnline(context) && hasWhisper;
         if (online) {
             startRecordForOnline(context);
         } else {
@@ -119,7 +118,7 @@ public class SpeechProcessor {
                     if (n > 0) pcm.write(buffer, 0, n);
                 }
                 byte[] wavData = WavUtils.pcmToWav(pcm.toByteArray(), Config.SAMPLE_RATE, 1, 16);
-                String text = sendToWhisper(wavData);
+                String text = sendToWhisper(context, wavData);
                 if (listener != null) listener.onFinalResult(text);
             } catch (Exception e) {
                 if (listener != null) listener.onError(e);
@@ -131,9 +130,10 @@ public class SpeechProcessor {
         recordThread.start();
     }
 
-    private String sendToWhisper(byte[] wavData) throws IOException {
-        if (Config.WHISPER_SERVER_URL == null || Config.WHISPER_SERVER_URL.isEmpty()) return "";
-        URL url = new URL(Config.WHISPER_SERVER_URL);
+    private String sendToWhisper(Context context, byte[] wavData) throws IOException {
+        String serverUrl = AppSettings.getWhisperServerUrl(context);
+        if (serverUrl == null || serverUrl.isEmpty()) return "";
+        URL url = new URL(serverUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(Config.HTTP_TIMEOUT_MS);
         conn.setReadTimeout(Config.HTTP_TIMEOUT_MS);

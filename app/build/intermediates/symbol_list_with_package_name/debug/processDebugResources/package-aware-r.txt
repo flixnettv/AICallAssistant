@@ -3369,6 +3369,7 @@ id search_voice_btn
 id select_dialog_listview
 id selected
 id selection_type
+id settingsButton
 id shortcut
 id showCustom
 id showHome

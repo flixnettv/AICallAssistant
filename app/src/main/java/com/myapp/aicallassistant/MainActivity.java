@@ -18,13 +18,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class MainActivity extends AppCompatActivity implements SpeechProcessor.Listener {
+public class MainActivity extends AppCompatActivity implements SpeechProcessor.Listener, OnlineAgentClient.ContextProvider {
 
     Switch autoReplySwitch;
     Switch offlineModeSwitch;
     Switch darkModeSwitch;
     Spinner voiceStyleSpinner;
     Button replyNowButton;
+    Button settingsButton;
     TextView aiResponseText;
 
     public static boolean autoReply = false;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
         darkModeSwitch = findViewById(R.id.darkModeSwitch);
         voiceStyleSpinner = findViewById(R.id.voiceStyleSpinner);
         replyNowButton = findViewById(R.id.replyNowButton);
+        settingsButton = findViewById(R.id.settingsButton);
         aiResponseText = findViewById(R.id.aiResponseText);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
             aiResponseText.setText("يسجّل الآن... تحدث من فضلك");
             speechProcessor.start(getApplicationContext(), offlineMode);
         });
+
+        settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     @Override
@@ -124,12 +128,17 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
     }
 
     private String generateReply(String input) {
-        if (!offlineMode && ConnectivityUtils.isOnline(getApplicationContext()) && Config.hasOnlineAgent()) {
+        if (!offlineMode && ConnectivityUtils.isOnline(getApplicationContext()) && AppSettings.getOllamaServerUrl(getApplicationContext()) != null && !AppSettings.getOllamaServerUrl(getApplicationContext()).trim().isEmpty()) {
             try {
-                String resp = OnlineAgentClient.generateReplyEgyptian(input);
+                String resp = OnlineAgentClient.generateReplyEgyptian(this, input);
                 if (resp != null && !resp.trim().isEmpty()) return resp.trim();
             } catch (Exception ignored) { }
         }
         return "أهلاً! أنا سامعك. عايزني أعمل إيه؟";
+    }
+
+    @Override
+    public android.content.Context getAppContext() {
+        return getApplicationContext();
     }
 }

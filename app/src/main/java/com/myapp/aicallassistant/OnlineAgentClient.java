@@ -8,11 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class OnlineAgentClient {
-    public static String generateReplyEgyptian(String userText) throws IOException {
-        if (Config.OLLAMA_SERVER_URL == null || Config.OLLAMA_SERVER_URL.isEmpty()) {
-            return "";
-        }
-        String endpoint = Config.OLLAMA_SERVER_URL;
+    public static String generateReplyEgyptian(ContextProvider ctxProvider, String userText) throws IOException {
+        String baseUrl = AppSettings.getOllamaServerUrl(ctxProvider.getAppContext());
+        String model = AppSettings.getOllamaModel(ctxProvider.getAppContext());
+        if (baseUrl == null || baseUrl.isEmpty()) return "";
+
+        String endpoint = baseUrl;
         if (!endpoint.endsWith("/")) endpoint += "/";
         endpoint += "api/generate";
 
@@ -24,7 +25,7 @@ public class OnlineAgentClient {
         JSONObject body = new JSONObject();
         JSONObject options = new JSONObject();
         try {
-            body.put("model", Config.OLLAMA_MODEL);
+            body.put("model", model == null || model.isEmpty() ? "llama3" : model);
             body.put("prompt", prompt);
             body.put("stream", false);
             options.put("temperature", 0.6);
@@ -53,5 +54,9 @@ public class OnlineAgentClient {
             }
         }
         return "";
+    }
+
+    public interface ContextProvider {
+        android.content.Context getAppContext();
     }
 }

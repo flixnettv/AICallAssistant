@@ -9,6 +9,7 @@ id ollamaModel
 id ollamaUrl
 id replyNowButton
 id saveButton
+id settingsButton
 id voiceStyleSpinner
 id whisperUrl
 layout activity_main
