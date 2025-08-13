@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SpeechProcessor.Listener {
 
     Switch autoReplySwitch;
     Switch offlineModeSwitch;
@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String[] VOICE_STYLES = new String[]{
             "طفل", "طفلة", "شاب", "شابة", "رجل عجوز", "امرأة عجوز", "مرعب وضخم", "ساخر"
     };
+
+    private SpeechProcessor speechProcessor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         VoiceResponder.initialize(getApplicationContext());
+        speechProcessor = new SpeechProcessor(this);
 
         autoReplySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> autoReply = isChecked);
         offlineModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> offlineMode = isChecked);
@@ -77,14 +80,40 @@ public class MainActivity extends AppCompatActivity {
         });
 
         replyNowButton.setOnClickListener(v -> {
-            String baseMessage = "مرحبًا! كيف يمكنني مساعدتك؟";
-            String response = baseMessage;
-            if (!offlineMode && ConnectivityUtils.isOnline(getApplicationContext())) {
-                String dialect = DialectDetector.detectDialect("مرحبا");
-                response = "مرحبًا! (وضع متصل) " + (dialect.isEmpty() ? "" : ("- لهجة: " + dialect + " ")) + "كيف أقدر أساعدك؟";
-            }
-            aiResponseText.setText(response);
-            VoiceResponder.replyWithStyle(response, selectedVoiceStyle);
+            aiResponseText.setText("يسجّل الآن... تحدث من فضلك");
+            speechProcessor.start(getApplicationContext(), offlineMode);
         });
+    }
+
+    @Override
+    public void onPartialResult(String text) {
+        runOnUiThread(() -> aiResponseText.setText("(جزئي) " + text));
+    }
+
+    @Override
+    public void onFinalResult(String text) {
+        runOnUiThread(() -> {
+            String input = text == null || text.trim().isEmpty() ? "" : text.trim();
+            String reply = input.isEmpty() ? "مرحبًا! كيف يمكنني مساعدتك؟" : generateReply(input);
+            aiResponseText.setText("أنت قلت: " + input + "\nالرد: " + reply);
+            VoiceResponder.replyWithStyle(reply, selectedVoiceStyle);
+        });
+    }
+
+    @Override
+    public void onError(Exception e) {
+        runOnUiThread(() -> aiResponseText.setText("حدث خطأ في التعرف الصوتي"));
+    }
+
+    private String generateReply(String input) {
+        if (!offlineMode && ConnectivityUtils.isOnline(getApplicationContext()) && Config.hasOnlineAgent()) {
+            // TODO: call Ollama server for a better reply
+            return "سمعتك تقول: " + input + ". كيف أستطيع المساعدة أكثر؟";
+        }
+        String dialect = DialectDetector.detectDialect(input);
+        if (!dialect.isEmpty()) {
+            return "أهلاً! (غير متصل) لهجتك: " + dialect + ". كيف أقدر أساعدك؟";
+        }
+        return "أهلاً! كيف أقدر أساعدك؟";
     }
 }
