@@ -55,6 +55,13 @@
 
                 <data android:scheme="tel" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/calls" />
+            </intent-filter>
         </activity>
         <activity android:name="com.myapp.aicallassistant.ContactsActivity" />
         <activity
@@ -74,6 +81,9 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.myapp.aicallassistant.Scheduler"
+            android:exported="false" />
 
         <!-- InCallService required for being default dialer (minimal implementation) -->
         <service

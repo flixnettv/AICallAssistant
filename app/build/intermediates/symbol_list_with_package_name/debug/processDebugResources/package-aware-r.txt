@@ -3073,7 +3073,10 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
+id aiCallSwitch
+id aiReasonInput
 id aiResponseText
+id aiVoiceSpinner
 id alertTitle
 id aligned
 id all
@@ -3358,6 +3361,10 @@ id save_non_transition_alpha
 id save_overlay_view
 id sawtooth
 id scale
+id scheduleNumber
+id scheduleReason
+id scheduleSaveBtn
+id scheduleTime
 id screen
 id scroll
 id scrollIndicatorDown
@@ -3441,6 +3448,7 @@ id textinput_helper_text
 id textinput_placeholder
 id textinput_prefix_text
 id textinput_suffix_text
+id themeSpinner
 id time
 id title
 id titleDividerNoCustom

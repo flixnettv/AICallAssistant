@@ -25,6 +25,9 @@ public class DialerActivity extends AppCompatActivity {
     Button callBtn;
     Button askDefaultBtn;
     Button contactsBtn;
+    android.widget.Switch aiCallSwitch;
+    EditText aiReasonInput;
+    android.widget.Spinner aiVoiceSpinner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,10 +38,21 @@ public class DialerActivity extends AppCompatActivity {
         callBtn = findViewById(R.id.callBtn);
         askDefaultBtn = findViewById(R.id.askDefaultDialerBtn);
         contactsBtn = findViewById(R.id.openContactsBtn);
+        aiCallSwitch = findViewById(R.id.aiCallSwitch);
+        aiReasonInput = findViewById(R.id.aiReasonInput);
+        aiVoiceSpinner = findViewById(R.id.aiVoiceSpinner);
 
         callBtn.setOnClickListener(v -> placeCall());
         askDefaultBtn.setOnClickListener(v -> requestDefaultDialer());
         contactsBtn.setOnClickListener(v -> startActivity(new Intent(this, ContactsActivity.class)));
+
+        // voice styles list
+        String[] styles = new String[]{"طفل","طفلة","شاب","شابة","رجل عجوز","امرأة عجوز","مرعب وضخم","ساخر"};
+        android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this, android.R.layout.simple_spinner_item, styles);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        aiVoiceSpinner.setAdapter(adapter);
+        int defaultIndex = 2; // شاب
+        aiVoiceSpinner.setSelection(defaultIndex);
 
         // If started with tel: URI, prefill number
         Intent intent = getIntent();
@@ -58,6 +72,15 @@ public class DialerActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQ_CALL_PERM);
             return;
         }
+
+        if (aiCallSwitch.isChecked()) {
+            String reason = aiReasonInput.getText() == null ? "" : aiReasonInput.getText().toString().trim();
+            String style = (String) aiVoiceSpinner.getSelectedItem();
+            AIAssistController.setPendingOutgoing(number, reason, style);
+        } else {
+            AIAssistController.clear();
+        }
+
         Uri uri = Uri.fromParts("tel", number, null);
         Intent call = new Intent(Intent.ACTION_CALL, uri);
         startActivity(call);
