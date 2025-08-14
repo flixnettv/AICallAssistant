@@ -3,3 +3,5 @@
   "features": {}
 }
 "ghcr.io/muhmdraouf/devcontainers-features/alpine-apk:0": {}
+}
+"ghcr.io/nordcominc/devcontainer-features/android-sdk:1": {}
