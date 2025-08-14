@@ -34,9 +34,9 @@ public class SpeechProcessor {
 
     public void start(Context context, boolean offlinePreferred) {
         boolean hasWhisper = AppSettings.getWhisperServerUrl(context) != null && !AppSettings.getWhisperServerUrl(context).trim().isEmpty();
-        boolean online = !offlinePreferred && ConnectivityUtils.isOnline(context) && hasWhisper;
-        if (online) {
-            startRecordForOnline(context);
+        boolean canTryOnline = !offlinePreferred && ConnectivityUtils.isOnline(context) && hasWhisper;
+        if (canTryOnline) {
+            startRecordForOnline(context, true);
         } else {
             startVoskOffline(context);
         }
@@ -100,7 +100,7 @@ public class SpeechProcessor {
         recordThread.start();
     }
 
-    private void startRecordForOnline(Context context) {
+    private void startRecordForOnline(Context context, boolean allowFallback) {
         final int bufferSize = AudioRecord.getMinBufferSize(Config.SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
         isRecording = true;
@@ -110,6 +110,7 @@ public class SpeechProcessor {
                     AudioFormat.ENCODING_PCM_16BIT, bufferSize);
             byte[] buffer = new byte[bufferSize];
             ByteArrayOutputStream pcm = new ByteArrayOutputStream();
+            boolean failed = false;
             try {
                 recorder.startRecording();
                 long endTime = System.currentTimeMillis() + Config.RECORD_MS;
@@ -119,12 +120,21 @@ public class SpeechProcessor {
                 }
                 byte[] wavData = WavUtils.pcmToWav(pcm.toByteArray(), Config.SAMPLE_RATE, 1, 16);
                 String text = sendToWhisper(context, wavData);
-                if (listener != null) listener.onFinalResult(text);
+                if (text == null || text.trim().isEmpty()) {
+                    failed = true;
+                } else {
+                    if (listener != null) listener.onFinalResult(text);
+                }
             } catch (Exception e) {
+                failed = true;
                 if (listener != null) listener.onError(e);
             } finally {
                 try { recorder.stop(); } catch (Exception ignored) {}
                 recorder.release();
+            }
+            if (allowFallback && failed) {
+                // Seamless fallback to offline
+                startVoskOffline(context);
             }
         }, "online-recorder");
         recordThread.start();

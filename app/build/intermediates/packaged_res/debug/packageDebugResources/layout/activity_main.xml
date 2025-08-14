@@ -11,12 +11,6 @@
         android:layout_height="wrap_content" />
 
     <Switch
-        android:id="@+id/offlineModeSwitch"
-        android:text="العمل بدون إنترنت (محدود)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Switch
         android:id="@+id/darkModeSwitch"
         android:text="الوضع الداكن"
         android:layout_width="wrap_content"

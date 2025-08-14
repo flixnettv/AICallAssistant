@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class IncomingCallActivity extends AppCompatActivity {
     private Switch autoReplySwitch;
-    private Switch offlineModeSwitch;
     private Spinner voiceStyleSpinner;
     private Button quick1;
     private Button quick2;
@@ -47,7 +46,6 @@ public class IncomingCallActivity extends AppCompatActivity {
 
         callerNumberText = findViewById(R.id.callerNumberText);
         autoReplySwitch = findViewById(R.id.autoReplySwitch);
-        offlineModeSwitch = findViewById(R.id.offlineModeSwitch);
         voiceStyleSpinner = findViewById(R.id.voiceStyleSpinner);
         quick1 = findViewById(R.id.quick1);
         quick2 = findViewById(R.id.quick2);
@@ -62,7 +60,6 @@ public class IncomingCallActivity extends AppCompatActivity {
         callerNumberText.setText(number == null || number.trim().isEmpty() ? "غير معروف" : number);
 
         autoReplySwitch.setChecked(MainActivity.autoReply);
-        offlineModeSwitch.setChecked(MainActivity.offlineMode);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, MainActivity.VOICE_STYLES);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -100,11 +97,10 @@ public class IncomingCallActivity extends AppCompatActivity {
 
         startReplyButton.setOnClickListener(v -> {
             MainActivity.autoReply = autoReplySwitch.isChecked();
-            MainActivity.offlineMode = offlineModeSwitch.isChecked();
             String style = (String) voiceStyleSpinner.getSelectedItem();
             MainActivity.selectedVoiceStyle = style;
 
-            boolean online = !MainActivity.offlineMode && ConnectivityUtils.isOnline(getApplicationContext());
+            boolean online = ConnectivityUtils.isOnline(getApplicationContext());
             String message;
             if (selectedQuickTemplate != null && !selectedQuickTemplate.isEmpty()) {
                 message = selectedQuickTemplate;
@@ -120,12 +116,10 @@ public class IncomingCallActivity extends AppCompatActivity {
         });
 
         answerAiButton.setOnClickListener(v -> {
-            // Reveal AI controls below if hidden and let user pick quick replies then start
             Toast.makeText(this, "اختر إعدادات الرد ثم اضغط بدء الرد", Toast.LENGTH_SHORT).show();
         });
 
         answerNormalButton.setOnClickListener(v -> {
-            // Close this UI to let it be a normal call
             finish();
         });
 

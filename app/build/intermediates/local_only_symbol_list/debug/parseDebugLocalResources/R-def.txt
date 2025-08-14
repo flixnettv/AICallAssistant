@@ -11,7 +11,6 @@ id callerNumberText
 id darkModeSwitch
 id dismissButton
 id menu_settings
-id offlineModeSwitch
 id ollamaModel
 id ollamaUrl
 id phoneNumber

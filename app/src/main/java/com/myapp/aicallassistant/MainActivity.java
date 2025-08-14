@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 public class MainActivity extends AppCompatActivity implements SpeechProcessor.Listener, OnlineAgentClient.ContextProvider {
 
     Switch autoReplySwitch;
-    Switch offlineModeSwitch;
     Switch darkModeSwitch;
     Spinner voiceStyleSpinner;
     Button replyNowButton;
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
     Button aiCallButton;
 
     public static boolean autoReply = false;
-    public static boolean offlineMode = false;
     public static String selectedVoiceStyle = "شاب";
 
     public static final String[] VOICE_STYLES = new String[]{
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
         setContentView(R.layout.activity_main);
 
         autoReplySwitch = findViewById(R.id.autoReplySwitch);
-        offlineModeSwitch = findViewById(R.id.offlineModeSwitch);
         darkModeSwitch = findViewById(R.id.darkModeSwitch);
         voiceStyleSpinner = findViewById(R.id.voiceStyleSpinner);
         replyNowButton = findViewById(R.id.replyNowButton);
@@ -53,9 +50,23 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
         aiResponseText = findViewById(R.id.aiResponseText);
         aiCallButton = findViewById(R.id.aiCallButton);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE},
+                    1);
+        }
+
+        VoiceResponder.initialize(getApplicationContext());
+        speechProcessor = new SpeechProcessor(this);
+
         autoReply = AppSettings.isAutoReplyDefault(this);
         autoReplySwitch.setChecked(autoReply);
-        offlineModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> offlineMode = isChecked);
+        autoReplySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            autoReply = isChecked;
+            AppSettings.setAutoReplyDefault(getApplicationContext(), isChecked);
+        });
+
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             AppCompatDelegate.setDefaultNightMode(isChecked
                     ? AppCompatDelegate.MODE_NIGHT_YES
@@ -79,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
 
         replyNowButton.setOnClickListener(v -> {
             aiResponseText.setText("يسجّل الآن... تحدث من فضلك");
-            speechProcessor.start(getApplicationContext(), offlineMode);
+            // Always attempt online first; fallback to offline automatically inside SpeechProcessor
+            speechProcessor.start(getApplicationContext(), false);
         });
 
         settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
@@ -125,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
     }
 
     private String generateReply(String input) {
-        if (!offlineMode && ConnectivityUtils.isOnline(getApplicationContext()) && AppSettings.getOllamaServerUrl(getApplicationContext()) != null && !AppSettings.getOllamaServerUrl(getApplicationContext()).trim().isEmpty()) {
+        if (ConnectivityUtils.isOnline(getApplicationContext()) && AppSettings.getOllamaServerUrl(getApplicationContext()) != null && !AppSettings.getOllamaServerUrl(getApplicationContext()).trim().isEmpty()) {
             try {
                 String resp = OnlineAgentClient.generateReplyEgyptian(this, input);
                 if (resp != null && !resp.trim().isEmpty()) return resp.trim();
