@@ -3082,6 +3082,7 @@ id animateToEnd
 id animateToStart
 id arc
 id asConfigured
+id askDefaultDialerBtn
 id async
 id auto
 id autoComplete
@@ -3096,6 +3097,7 @@ id blocking
 id bottom
 id bounce
 id buttonPanel
+id callBtn
 id cancel_button
 id center
 id centerCrop
@@ -3115,6 +3117,7 @@ id clockwise
 id collapseActionView
 id compress
 id confirm_button
+id contactsList
 id container
 id content
 id contentPanel
@@ -3169,6 +3172,7 @@ id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
 id fade
+id fetchModelsButton
 id fill
 id fill_horizontal
 id fill_vertical
@@ -3246,6 +3250,8 @@ id material_timepicker_ok_button
 id material_timepicker_view
 id material_value_index
 id matrix
+id menu_contacts
+id menu_dialer
 id menu_settings
 id message
 id middle
@@ -3295,11 +3301,13 @@ id normal
 id notification_background
 id notification_main_column
 id notification_main_column_container
+id numberInput
 id off
 id offlineModeSwitch
 id ollamaModel
 id ollamaUrl
 id on
+id openContactsBtn
 id open_search_bar_text_view
 id open_search_view_background
 id open_search_view_clear_button
@@ -3416,6 +3424,7 @@ id tag_transition_group
 id tag_unhandled_key_event_manager
 id tag_unhandled_key_listeners
 id tag_window_insets_animation_callback
+id testButton
 id text
 id text2
 id textEnd
@@ -3584,6 +3593,8 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_contacts
+layout activity_dialer
 layout activity_main
 layout activity_settings
 layout custom_dialog

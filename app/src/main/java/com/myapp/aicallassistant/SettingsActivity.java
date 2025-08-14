@@ -12,7 +12,9 @@ public class SettingsActivity extends AppCompatActivity {
     EditText whisperUrl;
     EditText ollamaUrl;
     EditText ollamaModel;
-    Button saveButton;
+         Button saveButton;
+     Button testButton;
+     Button fetchModelsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,8 @@ public class SettingsActivity extends AppCompatActivity {
         ollamaUrl = findViewById(R.id.ollamaUrl);
         ollamaModel = findViewById(R.id.ollamaModel);
         saveButton = findViewById(R.id.saveButton);
+        testButton = findViewById(R.id.testButton);
+        fetchModelsButton = findViewById(R.id.fetchModelsButton);
 
         whisperUrl.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         ollamaUrl.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
@@ -40,5 +44,21 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        testButton.setOnClickListener(v -> new Thread(() -> {
+            String w = AppSettings.getWhisperServerUrl(this);
+            String o = AppSettings.getOllamaServerUrl(this);
+            boolean wOk = HttpTestUtils.pingJsonPost(w);
+            boolean oOk = HttpTestUtils.pingJsonGet(o + (o.endsWith("/")?"":"/") + "api/tags");
+            runOnUiThread(() -> android.widget.Toast.makeText(this,
+                    (wOk?"Whisper OK":"Whisper FAILED") + " | " + (oOk?"Ollama OK":"Ollama FAILED"),
+                    android.widget.Toast.LENGTH_LONG).show());
+        }).start());
+
+        fetchModelsButton.setOnClickListener(v -> new Thread(() -> {
+            String base = AppSettings.getOllamaServerUrl(this);
+            String tags = HttpTestUtils.httpGet(base + (base.endsWith("/")?"":"/") + "api/tags");
+            runOnUiThread(() -> ollamaModel.setText(HttpTestUtils.pickFirstModel(tags)));
+        }).start());
     }
 }

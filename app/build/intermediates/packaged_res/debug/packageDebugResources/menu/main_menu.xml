@@ -3,4 +3,12 @@
         android:id="@+id/menu_settings"
         android:title="الإعدادات"
         android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_dialer"
+        android:title="لوحة الاتصال"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_contacts"
+        android:title="جهات الاتصال"
+        android:showAsAction="never" />
 </menu>
