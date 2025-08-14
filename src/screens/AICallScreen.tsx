@@ -1,528 +1,610 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  TextInput,
+  ScrollView,
   Alert,
+  TextInput,
+  Switch,
   Modal,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
+import { aiAgent, callAgent } from '../agents';
+import { AIVoice } from '../types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const AICallScreen = ({ navigation }: any) => {
-  const { colors } = useTheme();
-  
-  const [selectedVoice, setSelectedVoice] = useState('young-male');
+interface AICallScreenProps {
+  route: {
+    params: {
+      phoneNumber?: string;
+      contactName?: string;
+    };
+  };
+}
+
+const AICallScreen: React.FC<AICallScreenProps> = ({ route }) => {
+  const navigation = useNavigation();
+  const { colors, isDark } = useTheme();
+  const [phoneNumber, setPhoneNumber] = useState(route.params?.phoneNumber || '');
+  const [contactName, setContactName] = useState(route.params?.contactName || '');
   const [callReason, setCallReason] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isScheduled, setIsScheduled] = useState(false);
+  const [scheduledTime, setScheduledTime] = useState(new Date());
+  const [selectedVoice, setSelectedVoice] = useState<AIVoice | null>(null);
+  const [isAIAutoReplyEnabled, setIsAIAutoReplyEnabled] = useState(false);
   const [showVoiceSelector, setShowVoiceSelector] = useState(false);
   const [isCalling, setIsCalling] = useState(false);
-  
-  const aiVoices = [
-    { id: 'young-male', name: 'Young Male', icon: 'person', description: 'Clear and friendly' },
-    { id: 'young-female', name: 'Young Female', icon: 'person', description: 'Warm and approachable' },
-    { id: 'elderly-male', name: 'Elderly Male', icon: 'elderly', description: 'Wise and authoritative' },
-    { id: 'elderly-female', name: 'Elderly Female', icon: 'elderly', description: 'Gentle and caring' },
-    { id: 'child-male', name: 'Child Male', icon: 'child-care', description: 'Playful and energetic' },
-    { id: 'child-female', name: 'Child Female', icon: 'child-care', description: 'Sweet and innocent' },
-    { id: 'deep-scary', name: 'Deep & Scary', icon: 'warning', description: 'Intimidating and powerful' },
+
+  // الأصوات المتاحة باللهجة المصرية
+  const availableVoices: AIVoice[] = [
+    {
+      id: 'egyptian_male_1',
+      name: 'أحمد - شاب مصري',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'male',
+      age: 'young',
+      description: 'صوت شاب مصري ودود',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_female_1',
+      name: 'فاطمة - شابة مصرية',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'female',
+      age: 'young',
+      description: 'صوت شابة مصرية لطيفة',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_child_male',
+      name: 'علي - طفل مصري',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'male',
+      age: 'child',
+      description: 'صوت طفل مصري مرح',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_child_female',
+      name: 'مريم - طفلة مصرية',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'female',
+      age: 'child',
+      description: 'صوت طفلة مصرية جميلة',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_elder_male',
+      name: 'محمد - عجوز مصري',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'male',
+      age: 'elder',
+      description: 'صوت عجوز مصري حكيم',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_elder_female',
+      name: 'زينب - عجوز مصرية',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'female',
+      age: 'elder',
+      description: 'صوت عجوز مصرية حنونة',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_funny',
+      name: 'مضحك - صوت هزلي',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'male',
+      age: 'young',
+      description: 'صوت مضحك وهزلي',
+      previewUrl: '',
+      isLocal: true,
+    },
+    {
+      id: 'egyptian_scary',
+      name: 'مرعب - صوت مخيف',
+      language: 'ar-EG',
+      dialect: 'egyptian',
+      gender: 'male',
+      age: 'young',
+      description: 'صوت مخيف ومرعب',
+      previewUrl: '',
+      isLocal: true,
+    },
   ];
-  
-  const callReasons = [
-    'Business Inquiry',
-    'Appointment Reminder',
-    'Follow-up Call',
-    'Customer Service',
-    'Sales Call',
-    'Personal Matter',
-    'Emergency',
-    'Custom...',
-  ];
-  
-  const handleVoiceSelect = (voiceId: string) => {
-    setSelectedVoice(voiceId);
-    setShowVoiceSelector(false);
-  };
-  
-  const handleCallReasonSelect = (reason: string) => {
-    if (reason === 'Custom...') {
-      setCallReason('');
-    } else {
-      setCallReason(reason);
+
+  useEffect(() => {
+    // تعيين صوت افتراضي
+    if (!selectedVoice) {
+      setSelectedVoice(availableVoices[0]);
     }
-  };
-  
-  const validateCall = () => {
+  }, []);
+
+  const handleMakeCall = async () => {
     if (!phoneNumber.trim()) {
-      Alert.alert('Error', 'Please enter a phone number');
-      return false;
+      Alert.alert('خطأ', 'يرجى إدخال رقم الهاتف');
+      return;
     }
-    
-    if (!callReason.trim()) {
-      Alert.alert('Error', 'Please select or enter a call reason');
-      return false;
+
+    if (!selectedVoice) {
+      Alert.alert('خطأ', 'يرجى اختيار صوت الذكاء الاصطناعي');
+      return;
     }
-    
-    return true;
-  };
-  
-  const initiateAICall = async () => {
-    if (!validateCall()) return;
-    
-    setIsCalling(true);
-    
+
     try {
-      // TODO: Implement actual AI call logic
-      Alert.alert(
-        'AI Call Initiated',
-        `Starting AI call to ${phoneNumber} with reason: "${callReason}"\n\nVoice: ${aiVoices.find(v => v.id === selectedVoice)?.name}`,
-        [
-          {
-            text: 'Cancel Call',
-            style: 'cancel',
-            onPress: () => setIsCalling(false),
-          },
-          {
-            text: 'Continue',
-            onPress: () => {
-              // TODO: Start the actual AI call
-              setTimeout(() => {
-                setIsCalling(false);
-                Alert.alert('Call Complete', 'AI call has been completed successfully!');
-              }, 3000);
-            },
-          },
-        ]
-      );
+      setIsCalling(true);
+
+      if (isScheduled) {
+        // جدولة المكالمة
+        await scheduleAICall();
+        Alert.alert('نجح', 'تم جدولة المكالمة بنجاح');
+      } else {
+        // إجراء المكالمة فوراً
+        await makeAICall();
+      }
     } catch (error) {
+      Alert.alert('خطأ', 'فشل في إجراء المكالمة: ' + error.message);
+    } finally {
       setIsCalling(false);
-      Alert.alert('Error', 'Failed to initiate AI call. Please try again.');
     }
   };
-  
-  const scheduleCall = () => {
-    if (!validateCall()) return;
-    
-    Alert.alert(
-      'Schedule AI Call',
-      'This feature will allow you to schedule AI calls for later. Coming soon!',
-      [{ text: 'OK' }]
-    );
+
+  const makeAICall = async () => {
+    const callTask = {
+      id: Date.now().toString(),
+      type: 'ai_call',
+      priority: 'high',
+      description: 'مكالمة بالذكاء الاصطناعي',
+      data: {
+        action: 'makeAICall',
+        phoneNumber,
+        contactName,
+        voice: selectedVoice,
+        reason: callReason,
+        isImmediate: true,
+      },
+      status: 'pending',
+      createdAt: new Date(),
+    };
+
+    const result = await callAgent.executeTask(callTask);
+    console.log('AI Call Result:', result);
   };
-  
-  const VoiceSelectorModal = () => (
-    <Modal
-      visible={showVoiceSelector}
-      transparent
-      animationType="slide"
-      onRequestClose={() => setShowVoiceSelector(false)}
-    >
-      <View style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
-          <View style={styles.modalHeader}>
-            <Text style={[styles.modalTitle, { color: colors.text }]}>Select AI Voice</Text>
-            <TouchableOpacity onPress={() => setShowVoiceSelector(false)}>
-              <Icon name="close" size={24} color={colors.textSecondary} />
-            </TouchableOpacity>
-          </View>
-          
-          <ScrollView style={styles.voiceList}>
-            {aiVoices.map((voice) => (
-              <TouchableOpacity
-                key={voice.id}
-                style={[
-                  styles.voiceItem,
-                  { 
-                    backgroundColor: selectedVoice === voice.id ? colors.primaryLight : colors.surface,
-                    borderColor: selectedVoice === voice.id ? colors.primary : colors.border,
-                  }
-                ]}
-                onPress={() => handleVoiceSelect(voice.id)}
-              >
-                <View style={styles.voiceInfo}>
-                  <Icon name={voice.icon} size={24} color={colors.primary} />
-                  <View style={styles.voiceText}>
-                    <Text style={[styles.voiceName, { color: colors.text }]}>{voice.name}</Text>
-                    <Text style={[styles.voiceDescription, { color: colors.textSecondary }]}>
-                      {voice.description}
-                    </Text>
-                  </View>
-                </View>
-                {selectedVoice === voice.id && (
-                  <Icon name="check" size={24} color={colors.primary} />
-                )}
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      </View>
-    </Modal>
-  );
-  
-  return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
-      <View style={[styles.header, { backgroundColor: colors.secondary }]}>
-        <Text style={styles.headerTitle}>AI Call Assistant</Text>
-        <Text style={styles.headerSubtitle}>Let AI handle your calls intelligently</Text>
-      </View>
+
+  const scheduleAICall = async () => {
+    const scheduleTask = {
+      id: Date.now().toString(),
+      type: 'ai_call_schedule',
+      priority: 'medium',
+      description: 'جدولة مكالمة بالذكاء الاصطناعي',
+      data: {
+        action: 'scheduleAICall',
+        phoneNumber,
+        contactName,
+        voice: selectedVoice,
+        reason: callReason,
+        scheduledTime,
+        isImmediate: false,
+      },
+      status: 'pending',
+      createdAt: new Date(),
+    };
+
+    const result = await callAgent.executeTask(scheduleTask);
+    console.log('Schedule Result:', result);
+  };
+
+  const previewVoice = async (voice: AIVoice) => {
+    try {
+      const previewTask = {
+        id: Date.now().toString(),
+        type: 'ai_voice_preview',
+        priority: 'low',
+        description: 'معاينة الصوت',
+        data: {
+          action: 'generateVoice',
+          text: 'أهلاً وسهلاً، إزيك؟ أنا الذكاء الاصطناعي بتاع التطبيق',
+          voice: voice.id,
+        },
+        status: 'pending',
+        createdAt: new Date(),
+      };
+
+      const result = await aiAgent.executeTask(previewTask);
+      console.log('Voice Preview Result:', result);
       
-      {/* Phone Number Input */}
-      <View style={[styles.section, { backgroundColor: colors.card }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Phone Number</Text>
+      // هنا يمكن تشغيل الصوت المُنشأ
+      Alert.alert('معاينة الصوت', `تم معاينة صوت: ${voice.name}`);
+    } catch (error) {
+      Alert.alert('خطأ', 'فشل في معاينة الصوت');
+    }
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 20,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 30,
+    },
+    headerTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginLeft: 15,
+      textAlign: 'right',
+    },
+    section: {
+      marginBottom: 25,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 15,
+      textAlign: 'right',
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      padding: 15,
+      fontSize: 16,
+      color: colors.text,
+      backgroundColor: colors.surface,
+      textAlign: 'right',
+      marginBottom: 15,
+    },
+    textArea: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      padding: 15,
+      fontSize: 16,
+      color: colors.text,
+      backgroundColor: colors.surface,
+      textAlign: 'right',
+      marginBottom: 15,
+      height: 100,
+      textAlignVertical: 'top',
+    },
+    switchContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+    switchLabel: {
+      fontSize: 16,
+      color: colors.text,
+      textAlign: 'right',
+    },
+    voiceSelector: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      padding: 15,
+      backgroundColor: colors.surface,
+      marginBottom: 15,
+    },
+    selectedVoice: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    selectedVoiceText: {
+      fontSize: 16,
+      color: colors.text,
+      textAlign: 'right',
+    },
+    changeVoiceButton: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 15,
+      paddingVertical: 8,
+      borderRadius: 6,
+    },
+    changeVoiceButtonText: {
+      color: colors.white,
+      fontSize: 14,
+      fontWeight: 'bold',
+    },
+    callButton: {
+      backgroundColor: colors.primary,
+      padding: 20,
+      borderRadius: 12,
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    callButtonText: {
+      color: colors.white,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    callButtonDisabled: {
+      backgroundColor: colors.disabled,
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalContent: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 20,
+      width: '90%',
+      maxHeight: '80%',
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    modalTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.text,
+      textAlign: 'right',
+    },
+    voiceItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 15,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    voiceInfo: {
+      flex: 1,
+    },
+    voiceName: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: colors.text,
+      textAlign: 'right',
+      marginBottom: 5,
+    },
+    voiceDescription: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      textAlign: 'right',
+    },
+    voiceActions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    previewButton: {
+      backgroundColor: colors.secondary,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 6,
+      marginRight: 10,
+    },
+    previewButtonText: {
+      color: colors.white,
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+    selectButton: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 15,
+      paddingVertical: 8,
+      borderRadius: 6,
+    },
+    selectButtonText: {
+      color: colors.white,
+      fontSize: 14,
+      fontWeight: 'bold',
+    },
+    closeButton: {
+      backgroundColor: colors.error,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 8,
+      marginTop: 20,
+      alignSelf: 'center',
+    },
+    closeButtonText: {
+      color: colors.white,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+  });
+
+  return (
+    <ScrollView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={30} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>مكالمة بالذكاء الاصطناعي</Text>
+      </View>
+
+      {/* معلومات الاتصال */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>معلومات الاتصال</Text>
+        
         <TextInput
-          style={[styles.phoneInput, { 
-            backgroundColor: colors.surface,
-            color: colors.text,
-            borderColor: colors.border
-          }]}
+          style={styles.input}
+          placeholder="رقم الهاتف"
+          placeholderTextColor={colors.textSecondary}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
-          placeholder="Enter phone number"
-          placeholderTextColor={colors.textSecondary}
           keyboardType="phone-pad"
         />
+
+        <TextInput
+          style={styles.input}
+          placeholder="اسم الشخص (اختياري)"
+          placeholderTextColor={colors.textSecondary}
+          value={contactName}
+          onChangeText={setContactName}
+        />
       </View>
-      
-      {/* Call Reason */}
-      <View style={[styles.section, { backgroundColor: colors.card }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Call Reason</Text>
+
+      {/* سبب الاتصال */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>سبب الاتصال</Text>
         
-        <View style={styles.reasonGrid}>
-          {callReasons.map((reason, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.reasonChip,
-                { 
-                  backgroundColor: callReason === reason ? colors.primary : colors.surface,
-                  borderColor: callReason === reason ? colors.primary : colors.border,
-                }
-              ]}
-              onPress={() => handleCallReasonSelect(reason)}
-            >
-              <Text style={[
-                styles.reasonChipText,
-                { color: callReason === reason ? 'white' : colors.text }
-              ]}>
-                {reason}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        
-        {callReason === '' && (
-          <TextInput
-            style={[styles.customReasonInput, { 
-              backgroundColor: colors.surface,
-              color: colors.text,
-              borderColor: colors.border
-            }]}
-            value={callReason}
-            onChangeText={setCallReason}
-            placeholder="Enter custom reason..."
-            placeholderTextColor={colors.textSecondary}
-            multiline
+        <TextInput
+          style={styles.textArea}
+          placeholder="اكتب سبب الاتصال ليعرفه الذكاء الاصطناعي..."
+          placeholderTextColor={colors.textSecondary}
+          value={callReason}
+          onChangeText={setCallReason}
+          multiline
+        />
+      </View>
+
+      {/* جدولة المكالمة */}
+      <View style={styles.section}>
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchLabel}>جدولة المكالمة</Text>
+          <Switch
+            value={isScheduled}
+            onValueChange={setIsScheduled}
+            trackColor={{ false: colors.disabled, true: colors.primary }}
+            thumbColor={colors.white}
           />
+        </View>
+
+        {isScheduled && (
+          <Text style={styles.sectionTitle}>
+            سيتم إضافة خيارات الجدولة قريباً
+          </Text>
         )}
       </View>
-      
-      {/* Voice Selection */}
-      <View style={[styles.section, { backgroundColor: colors.card }]}>
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>AI Voice</Text>
-          <TouchableOpacity 
-            style={styles.changeVoiceButton}
-            onPress={() => setShowVoiceSelector(true)}
-          >
-            <Text style={[styles.changeVoiceText, { color: colors.primary }]}>Change</Text>
-          </TouchableOpacity>
-        </View>
+
+      {/* اختيار الصوت */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>صوت الذكاء الاصطناعي</Text>
         
-        <TouchableOpacity 
-          style={[styles.selectedVoice, { backgroundColor: colors.surface }]}
-          onPress={() => setShowVoiceSelector(true)}
-        >
-          <Icon 
-            name={aiVoices.find(v => v.id === selectedVoice)?.icon || 'person'} 
-            size={32} 
-            color={colors.primary} 
-          />
-          <View style={styles.selectedVoiceInfo}>
-            <Text style={[styles.selectedVoiceName, { color: colors.text }]}>
-              {aiVoices.find(v => v.id === selectedVoice)?.name}
+        <View style={styles.voiceSelector}>
+          <View style={styles.selectedVoice}>
+            <Text style={styles.selectedVoiceText}>
+              {selectedVoice ? selectedVoice.name : 'اختر صوتاً'}
             </Text>
-            <Text style={[styles.selectedVoiceDescription, { color: colors.textSecondary }]}>
-              {aiVoices.find(v => v.id === selectedVoice)?.description}
-            </Text>
+            <TouchableOpacity
+              style={styles.changeVoiceButton}
+              onPress={() => setShowVoiceSelector(true)}
+            >
+              <Text style={styles.changeVoiceButtonText}>تغيير</Text>
+            </TouchableOpacity>
           </View>
-          <Icon name="chevron-right" size={24} color={colors.textSecondary} />
-        </TouchableOpacity>
-      </View>
-      
-      {/* Action Buttons */}
-      <View style={styles.actionButtons}>
-        <TouchableOpacity
-          style={[styles.callButton, { backgroundColor: colors.primary }]}
-          onPress={initiateAICall}
-          disabled={isCalling}
-        >
-          <Icon name="call" size={24} color="white" />
-          <Text style={styles.callButtonText}>
-            {isCalling ? 'Initiating Call...' : 'Start AI Call'}
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[styles.scheduleButton, { backgroundColor: colors.secondary }]}
-          onPress={scheduleCall}
-        >
-          <Icon name="schedule" size={24} color="white" />
-          <Text style={styles.scheduleButtonText}>Schedule Call</Text>
-        </TouchableOpacity>
-      </View>
-      
-      {/* Features Info */}
-      <View style={[styles.section, { backgroundColor: colors.card }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>AI Call Features</Text>
-        
-        <View style={styles.featureItem}>
-          <Icon name="smart-toy" size={20} color={colors.success} />
-          <Text style={[styles.featureText, { color: colors.text }]}>
-            AI conducts conversations based on your specified reason
-          </Text>
-        </View>
-        
-        <View style={styles.featureItem}>
-          <Icon name="record-voice-over" size={20} color={colors.info} />
-          <Text style={[styles.featureText, { color: colors.text }]}>
-            Multiple voice options for different scenarios
-          </Text>
-        </View>
-        
-        <View style={styles.featureItem}>
-          <Icon name="schedule" size={20} color={colors.warning} />
-          <Text style={[styles.featureText, { color: colors.text }]}>
-            Schedule calls for optimal timing
-          </Text>
-        </View>
-        
-        <View style={styles.featureItem}>
-          <Icon name="security" size={20} color={colors.success} />
-          <Text style={[styles.featureText, { color: colors.text }]}>
-            Secure and private AI conversations
-          </Text>
         </View>
       </View>
-      
-      <VoiceSelectorModal />
+
+      {/* إعدادات الرد التلقائي */}
+      <View style={styles.section}>
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchLabel}>تفعيل الرد التلقائي بالذكاء الاصطناعي</Text>
+          <Switch
+            value={isAIAutoReplyEnabled}
+            onValueChange={setIsAIAutoReplyEnabled}
+            trackColor={{ false: colors.disabled, true: colors.primary }}
+            thumbColor={colors.white}
+          />
+        </View>
+        <Text style={[styles.voiceDescription, { textAlign: 'right' }]}>
+          عند تفعيل هذا الخيار، سيرد الذكاء الاصطناعي تلقائياً على المكالمات الواردة
+        </Text>
+      </View>
+
+      {/* زر الاتصال */}
+      <TouchableOpacity
+        style={[
+          styles.callButton,
+          isCalling && styles.callButtonDisabled,
+        ]}
+        onPress={handleMakeCall}
+        disabled={isCalling}
+      >
+        <Text style={styles.callButtonText}>
+          {isCalling ? 'جاري الاتصال...' : 'اتصال بالذكاء الاصطناعي'}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal اختيار الصوت */}
+      <Modal
+        visible={showVoiceSelector}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowVoiceSelector(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>اختر صوت الذكاء الاصطناعي</Text>
+              <TouchableOpacity onPress={() => setShowVoiceSelector(false)}>
+                <Icon name="close" size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView>
+              {availableVoices.map((voice) => (
+                <View key={voice.id} style={styles.voiceItem}>
+                  <View style={styles.voiceInfo}>
+                    <Text style={styles.voiceName}>{voice.name}</Text>
+                    <Text style={styles.voiceDescription}>{voice.description}</Text>
+                  </View>
+                  
+                  <View style={styles.voiceActions}>
+                    <TouchableOpacity
+                      style={styles.previewButton}
+                      onPress={() => previewVoice(voice)}
+                    >
+                      <Text style={styles.previewButtonText}>معاينة</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity
+                      style={styles.selectButton}
+                      onPress={() => {
+                        setSelectedVoice(voice);
+                        setShowVoiceSelector(false);
+                      }}
+                    >
+                      <Text style={styles.selectButtonText}>اختيار</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowVoiceSelector(false)}
+            >
+              <Text style={styles.closeButtonText}>إغلاق</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    padding: 20,
-    paddingTop: 40,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 5,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
-  },
-  section: {
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-  },
-  phoneInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  reasonGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 16,
-  },
-  reasonChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
-    marginBottom: 8,
-    borderWidth: 1,
-  },
-  reasonChipText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  customReasonInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  changeVoiceButton: {
-    padding: 8,
-  },
-  changeVoiceText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  selectedVoice: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 8,
-  },
-  selectedVoiceInfo: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  selectedVoiceName: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  selectedVoiceDescription: {
-    fontSize: 14,
-  },
-  actionButtons: {
-    padding: 16,
-    gap: 16,
-  },
-  callButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  callButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  scheduleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  scheduleButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  featureText: {
-    fontSize: 14,
-    marginLeft: 12,
-    flex: 1,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '70%',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5EA',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  voiceList: {
-    padding: 20,
-  },
-  voiceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 8,
-    borderWidth: 1,
-  },
-  voiceInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  voiceText: {
-    marginLeft: 16,
-    flex: 1,
-  },
-  voiceName: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  voiceDescription: {
-    fontSize: 14,
-  },
-});
 
 export default AICallScreen;
