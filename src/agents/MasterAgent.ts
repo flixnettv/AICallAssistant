@@ -380,31 +380,45 @@ class MasterAgent implements MasterAgentInterface {
   
   // Private helper methods
   private async initializeSubAgents(): Promise<void> {
-    // Initialize Call Agent
-    const callAgent = new CallAgent();
-    this.agents.set('call', callAgent);
-    
-    // Initialize Message Agent
-    const messageAgent = new MessageAgent();
-    this.agents.set('message', messageAgent);
-    
-    // Initialize Contact Agent
-    const contactAgent = new ContactAgent();
-    this.agents.set('contact', contactAgent);
-    
-    // Initialize AI Agent
-    const aiAgent = new AIAgent();
-    this.agents.set('ai', aiAgent);
-    
-    // Initialize Security Agent
-    const securityAgent = new SecurityAgent();
-    this.agents.set('security', securityAgent);
-    
-    // Initialize Backup Agent
-    const backupAgent = new BackupAgent();
-    this.agents.set('backup', backupAgent);
-    
-    console.log(`✅ Initialized ${this.agents.size} sub-agents`);
+    try {
+      console.log('🤖 Initializing sub-agents...');
+
+      // Initialize all specialized agents
+      const agents = [
+        callAgent,
+        messageAgent,
+        contactAgent,
+        aiAgent,
+        securityAgent,
+        backupAgent,
+        integrationAgent,
+        analyticsAgent,
+      ];
+
+      // Start all agents in parallel
+      const startPromises = agents.map(agent => {
+        try {
+          return agent.start();
+        } catch (error) {
+          console.error(`❌ Failed to start agent ${agent.getId()}:`, error);
+          return Promise.resolve();
+        }
+      });
+
+      await Promise.all(startPromises);
+
+      // Register all agents
+      agents.forEach(agent => {
+        this.subAgents.set(agent.getId(), agent);
+        console.log(`✅ Agent registered: ${agent.getId()} (${agent.getName()})`);
+      });
+
+      console.log(`✅ All ${agents.length} sub-agents initialized successfully`);
+
+    } catch (error) {
+      console.error('❌ Initialize sub-agents error:', error);
+      throw error;
+    }
   }
   
   private findBestAgentForTask(task: AgentTask): BaseAgent | null {
