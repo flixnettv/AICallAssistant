@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/whisperUrl"
+        android:hint="Whisper Server URL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ollamaUrl"
+        android:hint="Ollama Server URL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ollamaModel"
+        android:hint="Ollama Model (e.g., llama3)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Switch
+        android:id="@+id/autoReplyDefaultSwitch"
+        android:text="تفعيل الرد التلقائي افتراضيًا"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/requestOverlayPermission"
+        android:text="السماح بالظهور فوق التطبيقات (لضوابط AI أثناء المكالمة)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:text="حفظ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
