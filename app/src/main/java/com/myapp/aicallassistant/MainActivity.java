@@ -84,13 +84,19 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        replyNowButton.setOnClickListener(v -> {
-            aiResponseText.setText("يسجّل الآن... تحدث من فضلك");
-            speechProcessor.start(getApplicationContext(), offlineMode);
-        });
-
-        settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
-    }
+                 replyNowButton.setOnClickListener(v -> {
+             aiResponseText.setText("يسجّل الآن... تحدث من فضلك");
+             speechProcessor.start(getApplicationContext(), offlineMode);
+         });
+ 
+         settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+ 
+         // Quick access to dialer if needed
+         aiResponseText.setOnLongClickListener(v -> {
+             startActivity(new Intent(this, DialerActivity.class));
+             return true;
+         });
+     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,8 +106,15 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_settings) {
+        int id = item.getItemId();
+        if (id == R.id.menu_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        } else if (id == R.id.menu_dialer) {
+            startActivity(new Intent(this, DialerActivity.class));
+            return true;
+        } else if (id == R.id.menu_contacts) {
+            startActivity(new Intent(this, ContactsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

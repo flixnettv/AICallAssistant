@@ -1,17 +1,28 @@
 R_DEF: Internal format may change without notice
 local
 id aiResponseText
+id askDefaultDialerBtn
 id autoReplySwitch
+id callBtn
+id contactsList
 id darkModeSwitch
+id fetchModelsButton
+id menu_contacts
+id menu_dialer
 id menu_settings
+id numberInput
 id offlineModeSwitch
 id ollamaModel
 id ollamaUrl
+id openContactsBtn
 id replyNowButton
 id saveButton
 id settingsButton
+id testButton
 id voiceStyleSpinner
 id whisperUrl
+layout activity_contacts
+layout activity_dialer
 layout activity_main
 layout activity_settings
 menu main_menu
