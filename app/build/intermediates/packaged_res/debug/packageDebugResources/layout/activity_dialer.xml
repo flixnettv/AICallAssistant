@@ -1,32 +1,53 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <EditText
-        android:id="@+id/numberInput"
-        android:hint="أدخل رقم الهاتف"
-        android:inputType="phone"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/callBtn"
-        android:text="اتصال"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/numberInput"
+            android:hint="أدخل رقم الهاتف"
+            android:inputType="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/askDefaultDialerBtn"
-        android:text="تعيين كتطبيق الاتصال الافتراضي"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/callBtn"
+            android:text="اتصال"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/openContactsBtn"
-        android:text="فتح جهات الاتصال"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Switch
+            android:id="@+id/aiCallSwitch"
+            android:text="اتصال بالذكاء الاصطناعي بالنيابة عني"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/aiReasonInput"
+            android:hint="سبب الاتصال (ليتعرف عليه الذكاء الاصطناعي)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/aiVoiceSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/askDefaultDialerBtn"
+            android:text="تعيين كتطبيق الاتصال الافتراضي"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/openContactsBtn"
+            android:text="فتح جهات الاتصال"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

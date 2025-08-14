@@ -36,6 +36,15 @@ public class VoiceResponder {
     }
 
     public static void replyWithStyle(String message, String style) {
+        speakWithStyle(message, style, false);
+    }
+
+    public static void replyToCallWithStyle(Context context, String message, String style) {
+        if (!initialized) initialize(context);
+        speakWithStyle(message, style, true);
+    }
+
+    private static void speakWithStyle(String message, String style, boolean duckAudio) {
         if (tts == null) return;
         float pitch = 1.0f;
         float rate = 1.0f;
@@ -54,16 +63,13 @@ public class VoiceResponder {
                 pitch = 0.9f; rate = 0.95f; break;
             case "مرعب وضخم":
                 pitch = 0.6f; rate = 0.9f; break;
-            case "عاهرة":
-                // Replace inappropriate style label with neutral variant for safety
-                pitch = 1.2f; rate = 1.05f; break;
             default:
                 pitch = 1.0f; rate = 1.0f; break;
         }
         tts.setPitch(pitch);
         tts.setSpeechRate(rate);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, "aicall_msg_style");
+            tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, duckAudio ? "aicall_incall" : "aicall_msg_style");
         } else {
             tts.speak(message, TextToSpeech.QUEUE_FLUSH, null);
         }
