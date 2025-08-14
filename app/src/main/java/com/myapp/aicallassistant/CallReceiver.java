@@ -11,14 +11,11 @@ public class CallReceiver extends BroadcastReceiver {
         String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
         if (state == null) return;
         if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {
-            if (MainActivity.autoReply) {
-                VoiceResponder.initialize(context);
-                boolean online = !MainActivity.offlineMode && ConnectivityUtils.isOnline(context);
-                String response = online
-                        ? "مرحبًا! أنت تتحدث مع المساعد الذكي، كيف أقدر أساعدك؟"
-                        : "مرحبًا! أنا مساعدك الصوتي بدون إنترنت، كيف أقدر أساعدك بشكل مبسط؟";
-                VoiceResponder.replyWithStyle(response, MainActivity.selectedVoiceStyle);
-            }
+            String number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            Intent ui = new Intent(context, IncomingCallActivity.class);
+            ui.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            ui.putExtra("incoming_number", number);
+            context.startActivity(ui);
         }
     }
 }

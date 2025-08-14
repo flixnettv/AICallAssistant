@@ -3096,6 +3096,7 @@ id blocking
 id bottom
 id bounce
 id buttonPanel
+id callerNumberText
 id cancel_button
 id center
 id centerCrop
@@ -3145,6 +3146,7 @@ id disableHome
 id disablePostScroll
 id disableScroll
 id disjoint
+id dismissButton
 id dragDown
 id dragEnd
 id dragLeft
@@ -3333,6 +3335,10 @@ id postLayout
 id pressed
 id progress_circular
 id progress_horizontal
+id quick1
+id quick2
+id quick3
+id quick4
 id radio
 id ratio
 id rectangles
@@ -3394,6 +3400,7 @@ id src_over
 id standard
 id start
 id startHorizontal
+id startReplyButton
 id startToEnd
 id startVertical
 id staticLayout
@@ -3584,6 +3591,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_incoming_call
 layout activity_main
 layout activity_settings
 layout custom_dialog

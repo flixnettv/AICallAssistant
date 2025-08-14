@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
     public static boolean offlineMode = false;
     public static String selectedVoiceStyle = "شاب";
 
-    private static final String[] VOICE_STYLES = new String[]{
+    public static final String[] VOICE_STYLES = new String[]{
             "طفل", "طفلة", "شاب", "شابة", "رجل عجوز", "امرأة عجوز", "مرعب وضخم", "ساخر"
     };
 

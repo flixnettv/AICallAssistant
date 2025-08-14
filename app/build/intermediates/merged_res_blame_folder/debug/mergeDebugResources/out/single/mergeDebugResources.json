@@ -1,5 +1,9 @@
 [
     {
+        "merged": "com.myapp.aicallassistant.app-debug-31:/layout_activity_incoming_call.xml.flat",
+        "source": "com.myapp.aicallassistant.app-main-33:/layout/activity_incoming_call.xml"
+    },
+    {
         "merged": "com.myapp.aicallassistant.app-debug-31:/layout_activity_settings.xml.flat",
         "source": "com.myapp.aicallassistant.app-main-33:/layout/activity_settings.xml"
     },

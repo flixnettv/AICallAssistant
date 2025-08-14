@@ -2,16 +2,25 @@ R_DEF: Internal format may change without notice
 local
 id aiResponseText
 id autoReplySwitch
+id callerNumberText
 id darkModeSwitch
+id dismissButton
 id menu_settings
 id offlineModeSwitch
 id ollamaModel
 id ollamaUrl
+id quick1
+id quick2
+id quick3
+id quick4
 id replyNowButton
 id saveButton
 id settingsButton
+id startReplyButton
+id title
 id voiceStyleSpinner
 id whisperUrl
+layout activity_incoming_call
 layout activity_main
 layout activity_settings
 menu main_menu
