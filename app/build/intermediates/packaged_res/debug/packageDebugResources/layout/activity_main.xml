@@ -34,6 +34,12 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/aiCallButton"
+        android:text="مكالمة AI"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
         android:id="@+id/settingsButton"
         android:text="الإعدادات"
         android:layout_width="match_parent"

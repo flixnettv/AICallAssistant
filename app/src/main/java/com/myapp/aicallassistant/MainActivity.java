@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
     Button replyNowButton;
     Button settingsButton;
     TextView aiResponseText;
+    Button aiCallButton;
 
     public static boolean autoReply = false;
     public static boolean offlineMode = false;
@@ -50,18 +51,10 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
         replyNowButton = findViewById(R.id.replyNowButton);
         settingsButton = findViewById(R.id.settingsButton);
         aiResponseText = findViewById(R.id.aiResponseText);
+        aiCallButton = findViewById(R.id.aiCallButton);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE},
-                    1);
-        }
-
-        VoiceResponder.initialize(getApplicationContext());
-        speechProcessor = new SpeechProcessor(this);
-
-        autoReplySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> autoReply = isChecked);
+        autoReply = AppSettings.isAutoReplyDefault(this);
+        autoReplySwitch.setChecked(autoReply);
         offlineModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> offlineMode = isChecked);
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             AppCompatDelegate.setDefaultNightMode(isChecked
@@ -90,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements SpeechProcessor.L
         });
 
         settingsButton.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+
+        if (aiCallButton != null) {
+            aiCallButton.setOnClickListener(v -> startActivity(new Intent(this, OutgoingAiCallActivity.class)));
+        }
     }
 
     @Override

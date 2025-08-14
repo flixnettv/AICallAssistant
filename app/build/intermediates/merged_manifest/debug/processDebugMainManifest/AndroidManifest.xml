@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <permission
         android:name="com.myapp.aicallassistant.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
@@ -44,6 +46,15 @@
             android:showWhenLocked="true"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar"
             android:turnScreenOn="true" />
+        <activity
+            android:name="com.myapp.aicallassistant.OutgoingAiCallActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+
+        <service
+            android:name="com.myapp.aicallassistant.IncomingCallOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection|phoneCall" />
 
         <receiver
             android:name="com.myapp.aicallassistant.CallReceiver"
@@ -52,6 +63,9 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.myapp.aicallassistant.AiCallSchedulerReceiver"
+            android:exported="false" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

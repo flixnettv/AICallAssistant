@@ -8,6 +8,7 @@ public class AppSettings {
     private static final String KEY_WHISPER_URL = "whisper_url";
     private static final String KEY_OLLAMA_URL = "ollama_url";
     private static final String KEY_OLLAMA_MODEL = "ollama_model";
+    private static final String KEY_AUTO_REPLY_DEFAULT = "auto_reply_default";
 
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -38,5 +39,13 @@ public class AppSettings {
 
     public static void setOllamaModel(Context context, String model) {
         prefs(context).edit().putString(KEY_OLLAMA_MODEL, model == null ? "llama3" : model.trim()).apply();
+    }
+
+    public static boolean isAutoReplyDefault(Context context) {
+        return prefs(context).getBoolean(KEY_AUTO_REPLY_DEFAULT, false);
+    }
+
+    public static void setAutoReplyDefault(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(KEY_AUTO_REPLY_DEFAULT, enabled).apply();
     }
 }

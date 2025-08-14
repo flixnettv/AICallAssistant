@@ -1,7 +1,12 @@
 R_DEF: Internal format may change without notice
 local
+id aiCallButton
 id aiResponseText
+id answerAiButton
+id answerNormalButton
+id autoReplyDefaultSwitch
 id autoReplySwitch
+id callPurpose
 id callerNumberText
 id darkModeSwitch
 id dismissButton
@@ -9,18 +14,25 @@ id menu_settings
 id offlineModeSwitch
 id ollamaModel
 id ollamaUrl
+id phoneNumber
+id playAiBtn
 id quick1
 id quick2
 id quick3
 id quick4
 id replyNowButton
+id requestOverlayPermission
 id saveButton
 id settingsButton
+id startAiCallBtn
 id startReplyButton
+id stopAiBtn
 id title
 id voiceStyleSpinner
 id whisperUrl
 layout activity_incoming_call
 layout activity_main
+layout activity_outgoing_ai_call
 layout activity_settings
+layout view_ai_overlay
 menu main_menu

@@ -3073,6 +3073,7 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
+id aiCallButton
 id aiResponseText
 id alertTitle
 id aligned
@@ -3080,6 +3081,8 @@ id all
 id always
 id animateToEnd
 id animateToStart
+id answerAiButton
+id answerNormalButton
 id arc
 id asConfigured
 id async
@@ -3087,6 +3090,7 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id autoReplyDefaultSwitch
 id autoReplySwitch
 id barrier
 id baseline
@@ -3096,6 +3100,7 @@ id blocking
 id bottom
 id bounce
 id buttonPanel
+id callPurpose
 id callerNumberText
 id cancel_button
 id center
@@ -3329,7 +3334,9 @@ id path
 id pathRelative
 id peekHeight
 id percent
+id phoneNumber
 id pin
+id playAiBtn
 id position
 id postLayout
 id pressed
@@ -3344,6 +3351,7 @@ id ratio
 id rectangles
 id replyNowButton
 id report_drawn
+id requestOverlayPermission
 id reverseSawtooth
 id right
 id rightToLeft
@@ -3399,6 +3407,7 @@ id src_in
 id src_over
 id standard
 id start
+id startAiCallBtn
 id startHorizontal
 id startReplyButton
 id startToEnd
@@ -3406,6 +3415,7 @@ id startVertical
 id staticLayout
 id staticPostLayout
 id stop
+id stopAiBtn
 id stretch
 id submenuarrow
 id submit_area
@@ -3593,6 +3603,7 @@ layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_incoming_call
 layout activity_main
+layout activity_outgoing_ai_call
 layout activity_settings
 layout custom_dialog
 layout design_bottom_navigation_item
@@ -3673,6 +3684,7 @@ layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
+layout view_ai_overlay
 menu main_menu
 plurals mtrl_badge_content_description
 string abc_action_bar_home_description

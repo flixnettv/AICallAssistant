@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /workspace/app/src/main/AndroidManifest.xml:2:1-39:12
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-39:12
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-39:12
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-39:12
+ADDED from /workspace/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:2:1-53:12
 MERGED from [com.google.android.material:material:1.12.0] /home/ubuntu/.gradle/caches/transforms-4/4e41cfd688f0c663f7cc7298d2b06c3e/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] /home/ubuntu/.gradle/caches/transforms-4/49d889fc1887c427715b28b56f4feb01/transformed/jetified-appcompat-resources-1.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/ubuntu/.gradle/caches/transforms-4/09713f26a1a089821e93cef5382fe17d/transformed/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
@@ -74,9 +74,17 @@ uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from /workspace/app/src/main/AndroidManifest.xml:8:5-79
 	android:name
 		ADDED from /workspace/app/src/main/AndroidManifest.xml:8:22-76
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from /workspace/app/src/main/AndroidManifest.xml:9:5-78
+	android:name
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:9:22-75
+uses-permission#android.permission.FOREGROUND_SERVICE
+ADDED from /workspace/app/src/main/AndroidManifest.xml:10:5-77
+	android:name
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:10:22-74
 application
-ADDED from /workspace/app/src/main/AndroidManifest.xml:10:5-38:19
-INJECTED from /workspace/app/src/main/AndroidManifest.xml:10:5-38:19
+ADDED from /workspace/app/src/main/AndroidManifest.xml:12:5-52:19
+INJECTED from /workspace/app/src/main/AndroidManifest.xml:12:5-52:19
 MERGED from [com.google.android.material:material:1.12.0] /home/ubuntu/.gradle/caches/transforms-4/4e41cfd688f0c663f7cc7298d2b06c3e/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /home/ubuntu/.gradle/caches/transforms-4/4e41cfd688f0c663f7cc7298d2b06c3e/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/ubuntu/.gradle/caches/transforms-4/09713f26a1a089821e93cef5382fe17d/transformed/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
@@ -98,57 +106,79 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/ubuntu/.gradle/caches
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.0] /home/ubuntu/.gradle/caches/transforms-4/906753b1313d0d6416aa8391cc212691/transformed/core-1.13.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:13:9-35
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:15:9-35
 	android:label
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:12:9-42
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:14:9-42
 	android:allowBackup
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:11:9-35
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:13:9-35
 	android:theme
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:14:9-68
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:16:9-68
 activity#com.myapp.aicallassistant.SettingsActivity
-ADDED from /workspace/app/src/main/AndroidManifest.xml:16:9-54
+ADDED from /workspace/app/src/main/AndroidManifest.xml:18:9-54
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:16:19-51
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:18:19-51
 activity#com.myapp.aicallassistant.MainActivity
-ADDED from /workspace/app/src/main/AndroidManifest.xml:18:11-23:14
+ADDED from /workspace/app/src/main/AndroidManifest.xml:20:9-25:20
 	android:exported
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:18:50-73
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:20:48-71
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:18:21-49
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:20:19-47
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /workspace/app/src/main/AndroidManifest.xml:19:4-22:20
+ADDED from /workspace/app/src/main/AndroidManifest.xml:21:13-24:29
 action#android.intent.action.MAIN
-ADDED from /workspace/app/src/main/AndroidManifest.xml:20:5-57
+ADDED from /workspace/app/src/main/AndroidManifest.xml:22:17-69
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:20:13-54
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:22:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /workspace/app/src/main/AndroidManifest.xml:21:5-65
+ADDED from /workspace/app/src/main/AndroidManifest.xml:23:17-77
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:21:15-62
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:23:27-74
 activity#com.myapp.aicallassistant.IncomingCallActivity
-ADDED from /workspace/app/src/main/AndroidManifest.xml:25:3-30:66
+ADDED from /workspace/app/src/main/AndroidManifest.xml:27:9-32:75
 	android:turnScreenOn
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:29:4-31
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:31:13-40
 	android:showWhenLocked
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:28:4-33
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:30:13-42
 	android:exported
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:27:4-28
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:29:13-37
 	android:theme
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:30:4-63
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:32:13-72
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:26:4-40
-receiver#com.myapp.aicallassistant.CallReceiver
-ADDED from /workspace/app/src/main/AndroidManifest.xml:32:9-36:20
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:28:13-49
+activity#com.myapp.aicallassistant.OutgoingAiCallActivity
+ADDED from /workspace/app/src/main/AndroidManifest.xml:34:9-37:75
 	android:exported
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:32:48-71
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:36:13-37
+	android:theme
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:37:13-72
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:32:19-47
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:35:13-51
+service#com.myapp.aicallassistant.IncomingCallOverlayService
+ADDED from /workspace/app/src/main/AndroidManifest.xml:39:9-42:73
+	android:exported
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:41:13-37
+	android:foregroundServiceType
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:42:13-70
+	android:name
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:40:13-55
+receiver#com.myapp.aicallassistant.CallReceiver
+ADDED from /workspace/app/src/main/AndroidManifest.xml:44:11-48:14
+	android:exported
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:44:50-73
+	android:name
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:44:21-49
 intent-filter#action:name:android.intent.action.PHONE_STATE
-ADDED from /workspace/app/src/main/AndroidManifest.xml:33:13-35:29
+ADDED from /workspace/app/src/main/AndroidManifest.xml:45:4-47:20
 action#android.intent.action.PHONE_STATE
-ADDED from /workspace/app/src/main/AndroidManifest.xml:34:17-76
+ADDED from /workspace/app/src/main/AndroidManifest.xml:46:5-64
 	android:name
-		ADDED from /workspace/app/src/main/AndroidManifest.xml:34:25-73
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:46:13-61
+receiver#com.myapp.aicallassistant.AiCallSchedulerReceiver
+ADDED from /workspace/app/src/main/AndroidManifest.xml:50:3-80
+	android:exported
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:50:53-77
+	android:name
+		ADDED from /workspace/app/src/main/AndroidManifest.xml:50:13-52
 uses-sdk
 INJECTED from /workspace/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /workspace/app/src/main/AndroidManifest.xml

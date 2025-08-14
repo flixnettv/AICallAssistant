@@ -25,6 +25,8 @@ public class IncomingCallActivity extends AppCompatActivity {
     private Button startReplyButton;
     private Button dismissButton;
     private TextView callerNumberText;
+    private Button answerAiButton;
+    private Button answerNormalButton;
 
     private String selectedQuickTemplate = "";
 
@@ -53,6 +55,8 @@ public class IncomingCallActivity extends AppCompatActivity {
         quick4 = findViewById(R.id.quick4);
         startReplyButton = findViewById(R.id.startReplyButton);
         dismissButton = findViewById(R.id.dismissButton);
+        answerAiButton = findViewById(R.id.answerAiButton);
+        answerNormalButton = findViewById(R.id.answerNormalButton);
 
         String number = getIntent().getStringExtra("incoming_number");
         callerNumberText.setText(number == null || number.trim().isEmpty() ? "غير معروف" : number);
@@ -113,6 +117,16 @@ public class IncomingCallActivity extends AppCompatActivity {
             VoiceResponder.initialize(getApplicationContext());
             VoiceResponder.replyWithStyle(message, MainActivity.selectedVoiceStyle);
             Toast.makeText(this, "تم تشغيل الرد الصوتي", Toast.LENGTH_SHORT).show();
+        });
+
+        answerAiButton.setOnClickListener(v -> {
+            // Reveal AI controls below if hidden and let user pick quick replies then start
+            Toast.makeText(this, "اختر إعدادات الرد ثم اضغط بدء الرد", Toast.LENGTH_SHORT).show();
+        });
+
+        answerNormalButton.setOnClickListener(v -> {
+            // Close this UI to let it be a normal call
+            finish();
         });
 
         dismissButton.setOnClickListener(v -> finish());

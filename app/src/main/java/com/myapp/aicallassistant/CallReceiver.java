@@ -16,6 +16,9 @@ public class CallReceiver extends BroadcastReceiver {
             ui.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             ui.putExtra("incoming_number", number);
             context.startActivity(ui);
+
+            // Start overlay controls
+            context.startForegroundService(new Intent(context, IncomingCallOverlayService.class));
         }
     }
 }

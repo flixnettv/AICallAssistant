@@ -20,6 +20,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/answerAiButton"
+            android:text="رد AI"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp" />
+        <Button
+            android:id="@+id/answerNormalButton"
+            android:text="رد عادي"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <Switch
         android:id="@+id/autoReplySwitch"
         android:text="الرد التلقائي لهذا الاتصال"

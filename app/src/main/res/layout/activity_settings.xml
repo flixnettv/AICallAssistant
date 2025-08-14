@@ -22,6 +22,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Switch
+        android:id="@+id/autoReplyDefaultSwitch"
+        android:text="تفعيل الرد التلقائي افتراضيًا"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/requestOverlayPermission"
+        android:text="السماح بالظهور فوق التطبيقات (لضوابط AI أثناء المكالمة)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/saveButton"
         android:text="حفظ"
