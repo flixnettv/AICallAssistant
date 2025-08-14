@@ -1,0 +1,247 @@
+version: '3.8'
+
+services:
+  # AI Text-to-Speech Service (Coqui TTS)
+  coqui-tts:
+    image: coqui/tts:latest
+    container_name: coqui-tts
+    ports:
+      - "5002:5002"
+    environment:
+      - TTS_SERVER_PORT=5002
+      - TTS_SERVER_HOST=0.0.0.0
+    volumes:
+      - ./ai-models:/app/models
+      - ./ai-cache:/app/cache
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Open TTS Service
+  open-tts:
+    image: synesthesiam/open-tts:latest
+    container_name: open-tts
+    ports:
+      - "5003:5003"
+    environment:
+      - TTS_SERVER_PORT=5003
+      - TTS_SERVER_HOST=0.0.0.0
+    volumes:
+      - ./ai-models:/app/models
+      - ./ai-cache:/app/cache
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Local LLM Service (Ollama)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    volumes:
+      - ./ollama-models:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Speech Recognition Service
+  speech-recognition:
+    build:
+      context: ./ai-services/speech-recognition
+      dockerfile: Dockerfile
+    container_name: speech-recognition
+    ports:
+      - "5004:5004"
+    environment:
+      - SPEECH_SERVER_PORT=5004
+      - SPEECH_SERVER_HOST=0.0.0.0
+    volumes:
+      - ./ai-models:/app/models
+      - ./audio-files:/app/audio
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # AI Conversation Service
+  ai-conversation:
+    build:
+      context: ./ai-services/conversation
+      dockerfile: Dockerfile
+    container_name: ai-conversation
+    ports:
+      - "5005:5005"
+    environment:
+      - CONVERSATION_SERVER_PORT=5005
+      - CONVERSATION_SERVER_HOST=0.0.0.0
+      - OLLAMA_URL=http://ollama:11434
+    volumes:
+      - ./ai-models:/app/models
+      - ./conversation-data:/app/data
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Spam Detection Service
+  spam-detection:
+    build:
+      context: ./ai-services/spam-detection
+      dockerfile: Dockerfile
+    container_name: spam-detection
+    ports:
+      - "5006:5006"
+    environment:
+      - SPAM_SERVER_PORT=5006
+      - SPAM_SERVER_HOST=0.0.0.0
+    volumes:
+      - ./ai-models:/app/models
+      - ./spam-data:/app/data
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Caller ID Service
+  caller-id:
+    build:
+      context: ./ai-services/caller-id
+      dockerfile: Dockerfile
+    container_name: caller-id
+    ports:
+      - "5007:5007"
+    environment:
+      - CALLER_ID_SERVER_PORT=5007
+      - CALLER_ID_SERVER_HOST=0.0.0.0
+    volumes:
+      - ./ai-models:/app/models
+      - ./caller-data:/app/data
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=contactmanager
+      - POSTGRES_USER=contactuser
+      - POSTGRES_PASSWORD=contactpass123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=contactuser
+      - MONGO_INITDB_ROOT_PASSWORD=contactpass123
+      - MONGO_INITDB_DATABASE=contactmanager
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Elasticsearch for Search
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - coqui-tts
+      - open-tts
+      - ollama
+      - speech-recognition
+      - ai-conversation
+      - spam-detection
+      - caller-id
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Monitoring & Logging
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+volumes:
+  redis-data:
+  postgres-data:
+  mongo-data:
+  elasticsearch-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  ai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
