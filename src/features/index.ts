@@ -10,6 +10,7 @@ import { callScenariosSystem } from './CallScenarios';
 import { callTheater } from './CallTheater';
 import { interactiveCallSystem } from './InteractiveCalls';
 import { personalityBasedCallSystem } from './PersonalityBasedCalls';
+import { aiHealthMonitor } from './AIHealthMonitor';
 
 export interface CreativeCallExperience {
   id: string;
@@ -449,5 +450,6 @@ export {
   callScenariosSystem,
   callTheater,
   interactiveCallSystem,
-  personalityBasedCallSystem
+  personalityBasedCallSystem,
+  aiHealthMonitor
 };

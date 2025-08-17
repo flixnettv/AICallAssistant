@@ -113,6 +113,15 @@ The AI Agents System is a sophisticated multi-agent architecture that provides i
   - Create dashboards
   - Data export capabilities
 
+### 10. AI Health Monitor (`AIHealthMonitor`)
+- **Purpose**: Real-time system health monitoring and alerting
+- **Responsibilities**:
+  - Monitor all agent health metrics
+  - Track system performance indicators
+  - Generate health alerts and recommendations
+  - Provide real-time health dashboard
+  - Automated issue detection and reporting
+
 ## 🚀 Getting Started
 
 ### Basic Usage
@@ -250,6 +259,30 @@ const metrics = await integrationAgent.executeTask({
 
 console.log('CPU Usage:', metrics.systemResources.cpu);
 console.log('Memory Usage:', metrics.systemResources.memory);
+
+### AI Health Monitor - Advanced System Monitoring
+
+```typescript
+import { aiHealthMonitor } from '../features/AIHealthMonitor';
+
+// Generate comprehensive health report
+const healthReport = await aiHealthMonitor.generateHealthReport();
+
+// Get real-time system statistics
+const systemStats = aiHealthMonitor.getSystemStats();
+
+// Monitor active alerts
+const activeAlerts = aiHealthMonitor.getActiveAlerts();
+
+// Resolve health alerts
+aiHealthMonitor.resolveAlert('alert_id');
+
+// Get detailed agent health metrics
+const agentMetrics = aiHealthMonitor.getCurrentHealthMetrics();
+
+// Control monitoring lifecycle
+aiHealthMonitor.startMonitoring();
+aiHealthMonitor.stopMonitoring();
 ```
 
 ## 🧪 Testing

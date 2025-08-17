@@ -13,6 +13,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import AICallScreen from '../screens/AICallScreen';
 import IncomingCallScreen from '../screens/IncomingCallScreen';
 import AISettingsScreen from '../screens/AISettingsScreen';
+import AIDashboardScreen from '../screens/AIDashboardScreen';
 
 // Components
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -67,6 +68,15 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
+        name="AI Dashboard"
+        component={AIDashboardScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="dashboard" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
@@ -116,6 +126,11 @@ const AppNavigator = () => {
         name="AISettings"
         component={AISettingsScreen}
         options={{ title: 'إعدادات الذكاء الاصطناعي' }}
+      />
+      <Stack.Screen
+        name="AIDashboard"
+        component={AIDashboardScreen}
+        options={{ title: 'لوحة تحكم الذكاء الاصطناعي' }}
       />
     </Stack.Navigator>
   );
