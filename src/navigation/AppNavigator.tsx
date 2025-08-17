@@ -11,6 +11,8 @@ import AddContactScreen from '../screens/AddContactScreen';
 import CallScreen from '../screens/CallScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AICallScreen from '../screens/AICallScreen';
+import IncomingCallScreen from '../screens/IncomingCallScreen';
+import AISettingsScreen from '../screens/AISettingsScreen';
 
 // Components
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -95,15 +97,25 @@ const AppNavigator = () => {
         component={MainTabNavigator}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      <Tab.Screen
         name="AddContact"
         component={AddContactScreen}
         options={{ title: 'Add Contact' }}
       />
-      <Stack.Screen
+      <Tab.Screen
         name="Call"
         component={CallScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="IncomingCall"
+        component={IncomingCallScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AISettings"
+        component={AISettingsScreen}
+        options={{ title: 'إعدادات الذكاء الاصطناعي' }}
       />
     </Stack.Navigator>
   );
